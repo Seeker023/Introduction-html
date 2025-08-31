@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tiny Quest — A Choice Game</title>  <!-- Friendly, jolly(ish) fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">  <style>
+    :root {
+      --bg: #0b1020;
+      --card: rgba(255,255,255,0.12);
+      --card-strong: rgba(255,255,255,0.18);
+      --text: #e9ecf1;
+      --accent: #7cf2d6;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      overflow: hidden; /* keeps background fixed */
+    }
+
+    /* Background image & gradient overlay */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background-position: center center;
+      background-size: cover;
+      filter: saturate(1.05);
+      transition: background-image 500ms ease-in-out, transform 300ms ease;
+      will-change: background-image;
+    }
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.7));
+      pointer-events: none;
+    }
+
+    /* Game UI */
+    .wrap {
+      position: relative;
+      min-height: 100dvh;
+      display: grid;
+      place-items: end center;
+      padding: clamp(16px, 2.5vw, 32px);
+    }
+
+    .hud {
+      width: min(900px, 100%);
+      background: linear-gradient(180deg, var(--card), var(--card-strong));
+      backdrop-filter: blur(10px) saturate(1.2);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      overflow: clip;
+      animation: pop 400ms ease;
+    }
+
+    @keyframes pop { from { transform: translateY(12px); opacity: 0 } }
+
+    .titlebar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+    }
+    .titlebar h1 {
+      font: 800 1.15rem 'Fredoka', 'Nunito', system-ui;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+    .badge { margin-left: auto; font-weight: 700; font-size: 0.9rem; opacity: 0.9 }
+
+    .scene {
+      padding: clamp(18px, 2.4vw, 26px);
+      line-height: 1.6;
+      font-size: clamp(1rem, 2.2vw, 1.12rem);
+    }
+    .scene p { margin: 0 0 14px 0; }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      padding: 0 16px 16px;
+    }
+
+    button.choice {
+      appearance: none;
+      border: 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.16);
+      color: var(--text);
+      font: 700 1rem 'Fredoka', 'Nunito', system-ui;
+      letter-spacing: 0.2px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 120ms ease, background 180ms ease;
+    }
+    button.choice:hover { transform: translateY(-1px); background: rgba(255,255,255,0.2); }
+    button.choice:active { transform: translateY(0); background: rgba(255,255,255,0.14); }
+
+    .utility {
+      display: flex; gap: 8px; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-top: 1px dashed rgba(255,255,255,0.2);
+      font-size: 0.9rem; opacity: 0.9;
+    }
+    .utility .left { display: flex; gap: 8px; align-items: center; }
+
+    .pill {
+      padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-weight: 800; font-size: 0.85rem;
+    }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* Mobile tweaks */
+    @media (max-width: 480px) {
+      .choices { grid-template-columns: 1fr; }
+    }
+  </style></head>
+<body>
+  <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+  <div class="scrim" aria-hidden="true"></div>  <div class="wrap">
+    <main class="hud" role="group" aria-label="Game window">
+      <div class="titlebar">
+        <h1>🌟 Tiny Quest</h1>
+        <span class="badge pill" id="statCoins" aria-live="polite" title="Shiny coins">🪙 0</span>
+        <span class="pill" id="statMood" aria-live="polite" title="Your vibe">🙂 Vibes OK</span>
+      </div><section class="scene" id="scene" tabindex="0">
+    <p>Loading adventure…</p>
+  </section>
+
+  <div class="choices" id="choices" aria-label="Choices"></div>
+
+  <div class="utility">
+    <div class="left">
+      <button class="choice" id="btnBack" title="Go back one step">⟵ Back</button>
+      <button class="choice" id="btnRestart" title="Restart the story">↻ Restart</button>
+    </div>
+    <div>
+      <span class="pill" id="sceneId">scene: —</span>
+    </div>
+  </div>
+</main>
+
+  </div>  <script>
+    /* ---------------------------------------------------------
+       Tiny Quest — a simple, editable choice-based story engine
+       - Single HTML file
+       - Uses background images per scene
+       - Mobile friendly, goofy tone possible 😄
+       --------------------------------------------------------- */
+
+    const images = {
+      town: 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?q=80&w=1600&auto=format&fit=crop',
+      forest: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop',
+      cave: 'https://images.unsplash.com/photo-1580894892929-29e66c6e0e7d?q=80&w=1600&auto=format&fit=crop',
+      beach: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop',
+      castle: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop'
+    };
+
+    // Preload images for smoother transitions
+    Object.values(images).forEach(src => { const i = new Image(); i.src = src; });
+
+    // Simple story graph
+    const story = {
+      start: {
+        bg: 'town',
+        text: `You wake in Sprinkleburg, where even the street lamps hum show tunes.\nA quest flyer flaps onto your face: \n\n"HERO WANTED. Reward: 7 shiny coins + one high‑five."`,
+        choices: [
+          { text: 'Accept the quest with dramatic finger guns ✨', to: 'square' },
+          { text: 'Decline politely; pursue snacks instead 🍩', to: 'snack' }
+        ]
+      },
+      snack: {
+        bg: 'beach',
+        text: `You beeline to a seaside snack cart. The vendor winks. \n"Try the Legendary Donut? It may or may not be sentient."`,
+        onEnter: s => { s.coins = (s.coins||0) - 1; s.mood += 1; },
+        choices: [
+          { text: 'Adopt the donut. Name it Sir Sprinkles.', to: 'donutBuddy' },
+          { text: 'Okay fine… go do the quest.', to: 'square' }
+        ]
+      },
+      donutBuddy: {
+        bg: 'beach',
+        text: `Sir Sprinkles pledges loyalty by shedding rainbow sugar. +Vibes`,
+        onEnter: s => { s.mood += 1; },
+        choices: [
+          { text: 'Head to town square with your new pastry pal.', to: 'square' }
+        ]
+      },
+      square: {
+        bg: 'town',
+        text: `Town Square is buzzing. A tiny mayor (hat bigger than body) points to a gloomy cave. \n"Please retrieve our missing disco ball!"`,
+        onEnter: s => { s.coins += 2; },
+        choices: [
+          { text: 'March to the cave 💪', to: 'caveEnter' },
+          { text: 'Ask more questions (stall for snacks).', to: 'ask' }
+        ]
+      },
+      ask: {
+        bg: 'town',
+        text: `"The cave is dramatic but mostly safe," the mayor shrugs. \nAlso, there may be a raccoon DJ.`,
+        choices: [
+          { text: 'Okay, to the cave!', to: 'caveEnter' },
+          { text: 'Nope. Beach time again.', to: 'snack' }
+        ]
+      },
+      caveEnter: {
+        bg: 'cave',
+        text: `You descend into glittering darkness. Something hums a bassline.`,
+        choices: [
+          { text: 'Call out: "Hello mysterious disco entity?"', to: 'caveDJ' },
+          { text: 'Sneak quietly (like a polite ninja).', to: 'sneak' }
+        ]
+      },
+      sneak: {
+        bg: 'cave',
+        text: `You tiptoe. A pebble betrays you with a dramatic CLINK. Spotlight hits.`,
+        choices: [
+          { text: 'Strike a pose. Commit to the bit.', to: 'caveDJ' },
+          { text: 'Run!!', to: 'square' }
+        ]
+      },
+      caveDJ: {
+        bg: 'cave',
+        text: `A raccoon in sunglasses spins the missing disco ball. "Cover charge is three coins," it chitters.`,
+        choices: [
+          { text: 'Pay the cover like a classy adventurer 🪙🪙🪙', to: 'pay' },
+          { text: 'Barter with your incredible dance moves.', to: 'dance' }
+        ]
+      },
+      pay: {
+        bg: 'cave',
+        text: `You pay three coins. The raccoon solemnly hands over the disco ball and a receipt.`,
+        onEnter: s => { s.coins -= 3; },
+        choices: [
+          { text: 'Return triumphantly to town!', to: 'win' }
+        ]
+      },
+      dance: {
+        bg: 'cave',
+        text: `You unleash the Forbidden Wiggle. The cave itself applauds. \nThe raccoon weeps, overcome, and gifts you the disco ball.`,
+        onEnter: s => { s.mood += 2; },
+        choices: [
+          { text: 'Return triumphantly to town!', to: 'win' }
+        ]
+      },
+      win: {
+        bg: 'castle',
+        text: `The mayor crowns you "Champion of Vibes". Fireworks! Someone hands you a blueberry lemonade.`,
+        onEnter: s => { s.coins += 5; s.mood += 1; },
+        choices: [
+          { text: 'Play again (new choices)!', to: 'start', effect: s => { /* soft reset but keep some stats */ s.mood = 0; s.history = []; } }
+        ]
+      }
+    };
+
+    // --- Engine state ---
+    const defaultState = { here: 'start', coins: 0, mood: 0, history: [] };
+    let state = { ...defaultState };
+
+    // Persist across refreshes
+    const saveKey = 'tiny-quest-save-v1';
+    const save = () => localStorage.setItem(saveKey, JSON.stringify(state));
+    const load = () => {
+      try { const raw = localStorage.getItem(saveKey); if (raw) state = JSON.parse(raw); } catch { /* ignore */ }
+    };
+    load();
+
+    // DOM refs
+    const elBackdrop = document.getElementById('backdrop');
+    const elScene = document.getElementById('scene');
+    const elChoices = document.getElementById('choices');
+    const elStatCoins = document.getElementById('statCoins');
+    const elStatMood = document.getElementById('statMood');
+    const elSceneId = document.getElementById('sceneId');
+    const btnBack = document.getElementById('btnBack');
+    const btnRestart = document.getElementById('btnRestart');
+
+    function setBackground(key) {
+      const url = images[key] || images.town;
+      // subtle parallax nudge
+      elBackdrop.style.transform = 'scale(1.02)';
+      elBackdrop.style.backgroundImage = `url("${url}")`;
+      setTimeout(() => elBackdrop.style.transform = 'scale(1)', 350);
+    }
+
+    function render() {
+      const node = story[state.here];
+      if (!node) return;
+
+      // onEnter logic (only when arriving fresh)
+      const last = state.history[state.history.length - 1];
+      if (last !== state.here && typeof node.onEnter === 'function') {
+        node.onEnter(state);
+      }
+
+      setBackground(node.bg);
+
+      // scene text (preserve line breaks)
+      elScene.innerHTML = '';
+      const p = document.createElement('p');
+      p.textContent = node.text;
+      elScene.appendChild(p);
+
+      // choices
+      elChoices.innerHTML = '';
+      node.choices.forEach((choice, idx) => {
+        const b = document.createElement('button');
+        b.className = 'choice';
+        b.textContent = choice.text;
+        b.setAttribute('data-to', choice.to);
+        b.setAttribute('data-idx', String(idx + 1));
+        b.addEventListener('click', () => choose(choice));
+        elChoices.appendChild(b);
+      });
+
+      // HUD stats
+      elStatCoins.textContent = `🪙 ${Math.max(0, state.coins)}`;
+      const mood = state.mood;
+      elStatMood.textContent = `${mood > 1 ? '😎 Vibes Immaculate' : mood > 0 ? '🙂 Vibes OK' : '😐 Vibes TBD'}`;
+      elSceneId.textContent = `scene: ${state.here}`;
+
+      // focus for keyboard users
+      elScene.focus();
+
+      save();
+    }
+
+    function go(to) {
+      state.history.push(state.here);
+      state.here = to;
+      render();
+    }
+
+    function choose(choice) {
+      if (typeof choice.effect === 'function') choice.effect(state);
+      go(choice.to);
+    }
+
+    // Back and restart
+    btnBack.addEventListener('click', () => {
+      const prev = state.history.pop();
+      if (prev) { state.here = prev; render(); }
+    });
+    btnRestart.addEventListener('click', () => {
+      state = { ...defaultState }; save(); render();
+    });
+
+    // Keyboard shortcuts: 1..9 to pick choices
+    document.addEventListener('keydown', (e) => {
+      if (e.key >= '1' && e.key <= '9') {
+        const idx = Number(e.key) - 1;
+        const node = story[state.here];
+        const choice = node.choices[idx];
+        if (choice) choose(choice);
+      }
+    });
+
+    // Boot
+    if (!story[state.here]) state.here = 'start';
+    render();
+  </script></body>
+</html>

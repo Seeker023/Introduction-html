@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forest Adventure</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    #game {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h2>Forest Adventure</h2>
+    <p id="story">You wake up in a mysterious forest. Two paths lie ahead: one leads deeper into the forest, the other toward a river. Which way will you go?</p>
+    <div id="choices"></div>
+  </div>
+
+  <script>
+    const storyElement = document.getElementById("story");
+    const choicesElement = document.getElementById("choices");
+
+    function showChoices(options) {
+      choicesElement.innerHTML = "";
+      options.forEach(option => {
+        let btn = document.createElement("button");
+        btn.textContent = option.text;
+        btn.onclick = option.action;
+        choicesElement.appendChild(btn);
+      });
+    }
+
+    function startGame() {
+      storyElement.textContent = "You wake up in a mysterious forest. Two paths lie ahead: one leads deeper into the forest, the other toward a river. Which way will you go?";
+      showChoices([
+        { text: "Go into the forest", action: forestPath },
+        { text: "Head toward the river", action: riverPath }
+      ]);
+    }
+
+    function forestPath() {
+      storyElement.textContent = "You walk deeper into the forest and encounter a hungry wolf. Do you fight it or run away?";
+      showChoices([
+        { text: "Fight", action: fightWolf },
+        { text: "Run away", action: runAway }
+      ]);
+    }
+
+    function riverPath() {
+      storyElement.textContent = "You reach the river. A boat is tied to a tree. Do you take the boat across or follow the riverbank?";
+      showChoices([
+        { text: "Take the boat", action: takeBoat },
+        { text: "Follow the riverbank", action: riverBank }
+      ]);
+    }
+
+    function fightWolf() {
+      storyElement.textContent = "You bravely fight the wolf but it's too strong. You are defeated. Game Over!";
+      showChoices([{ text: "Play Again", action: startGame }]);
+    }
+
+    function runAway() {
+      storyElement.textContent = "You manage to escape safely and find a hidden village. You are saved!";
+      showChoices([{ text: "Play Again", action: startGame }]);
+    }
+
+    function takeBoat() {
+      storyElement.textContent = "You row across the river and discover a treasure chest on the other side. You win!";
+      showChoices([{ text: "Play Again", action: startGame }]);
+    }
+
+    function riverBank() {
+      storyElement.textContent = "As you follow the riverbank, you encounter shivam , you die because witnessing such ugliness. Game Over!";
+      showChoices([{ text: "Play Again", action: startGame }]);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
