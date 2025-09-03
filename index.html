@@ -1,249 +1,180 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Om Bhushan - CV Website</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do You Love Me? 💕</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      color: #ffffff;
-      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413') no-repeat center center fixed;
-      background-size: cover;
-      scroll-behavior: smooth;
-    }
-    .overlay {
-      background: rgba(0, 0, 0, 0.6);
-      min-height: 100vh;
-    }
-    header {
-      background: rgba(0, 0, 0, 0.85);
-      padding: 10px 20px;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    nav {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: #ffffff;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 8px 15px;
-      border-radius: 20px;
-      transition: all 0.3s;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    nav a:hover,
-    nav a.active {
-      background: #ffd700;
-      color: #000;
-      box-shadow: 0 0 10px #ffd700;
-    }
-    .search-bar {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ffdee9, #b5fffc);
+      height: 100vh;
       display: flex;
       align-items: center;
-    }
-    .search-bar input {
-      padding: 6px 12px;
-      font-size: 0.9em;
-      border: none;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      transition: all 0.3s;
-      outline: none;
-      width: 160px;
-    }
-    .search-bar input:focus {
-      background: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 8px #ffd700;
-      width: 200px;
-    }
-    .search-bar input::placeholder {
-      color: #ddd;
-    }
-    section {
-      padding: 120px 20px 60px;
+      justify-content: center;
       text-align: center;
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 0.8s ease-out;
+      overflow: hidden;
     }
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .container {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 90%;
     }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+    img {
+      width: 150px;
+      height: auto;
+      margin-bottom: 15px;
     }
     h2 {
-      font-size: 2em;
-      margin-bottom: 15px;
-      font-weight: 600;
-      color: #ffd700;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #ff4081;
     }
-    .content {
-      max-width: 800px;
-      margin: auto;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    p {
-      font-size: 1.2em;
-      line-height: 1.8;
-    }
-    form {
+    .buttons {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    input, textarea {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1em;
+      gap: 20px;
+      justify-content: center;
     }
     button {
-      padding: 12px;
-      background: #ffd700;
+      padding: 10px 25px;
+      font-size: 1rem;
       border: none;
-      border-radius: 8px;
-      font-size: 1.1em;
-      font-weight: 600;
+      border-radius: 50px;
+      background: #ff9a9e;
+      color: white;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: transform 0.2s;
     }
     button:hover {
-      background: #e6c200;
+      transform: scale(1.1);
     }
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: rgba(0,0,0,0.85);
-      color: #aaa;
-      margin-top: 40px;
+    .sparkles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      display: none;
     }
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav {
-        margin-top: 10px;
-      }
-      .search-bar input {
-        width: 120px;
-      }
+    .sparkle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: gold;
+      border-radius: 50%;
+      animation: sparkle 1s linear forwards;
+    }
+    @keyframes sparkle {
+      0% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(2) translateY(-200px); }
     }
   </style>
 </head>
 <body>
-  <div class="overlay">
-    <header>
-      <nav>
-        <a href="#home">Home</a>
-        <a href="#about">About Me</a>
-        <a href="#education">Education</a>
-        <a href="#current">Current Studies</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search..." />
-      </div>
-    </header><section id="home">
-  <h1>My Introduction Website</h1>
-  <div class="content">
-    <p>Welcome to my personal introduction website. Scroll down to know more about me!</p>
-  </div>
-</section>
+  <!-- Music Tracks -->
+  <audio id="bg-music" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="victory-music">
+    <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="comedy-music" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-funnysong.mp3" type="audio/mpeg">
+  </audio>
 
-<section id="about">
-  <h2>About Me</h2>
-  <div class="content">
-    <p><strong>Name:</strong> Om Bhushan</p>
-    <p><strong>Age:</strong> 19</p>
-    <p><strong>Gender:</strong> Male</p>
+  <div class="container" id="content">
+    <img id="gif" src="https://media.giphy.com/media/l4FGuhL4U2WyjdkaY/giphy.gif" alt="cute gif">
+    <h2 id="question">Do you Love Me? 💕</h2>
+    <div class="buttons">
+      <button onclick="handleYes()">Yes</button>
+      <button id="noBtn" onclick="handleNo()">No</button>
+    </div>
   </div>
-</section>
 
-<section id="education">
-  <h2>Education</h2>
-  <div class="content">
-    <p>Undergraduate with Physics, Chemistry, Mathematics, English, and Computer Science as majors from CBSE Board.</p>
-    <p>Matriculated from CBSE Board.</p>
-  </div>
-</section>
+  <div class="sparkles" id="sparkles"></div>
 
-<section id="current">
-  <h2>Current Studies</h2>
-  <div class="content">
-    <p>Currently pursuing <strong>Bachelor of Technology in Computer Science</strong>.</p>
-  </div>
-</section>
-
-<section id="contact">
-  <h2>Contact Me</h2>
-  <div class="content">
-    <p>You can reach me at:</p>
-    <p><strong>Email:</strong> <a href="mailto:ombhushan512@gmail.com" style="color:#ffd700;">ombhushan512@gmail.com</a></p>
-    <form>
-      <input type="text" placeholder="Your Name" required />
-      <input type="email" placeholder="Your Email" required />
-      <textarea rows="5" placeholder="Your Message"></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-  </div>
-</section>
-
-<footer>
-  <p>© 2025 Om Bhushan | All Rights Reserved</p>
-</footer>
-
-  </div>
   <script>
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('nav a');
-    const searchInput = document.getElementById('searchInput');const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      navLinks.forEach(link => link.classList.remove('active'));
-      const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
-      if (activeLink) activeLink.classList.add('active');
+    let step = 0;
+    const gif = document.getElementById("gif");
+    const question = document.getElementById("question");
+    const content = document.getElementById("content");
+    const noBtn = document.getElementById("noBtn");
+    const sparkles = document.getElementById("sparkles");
+
+    const bgMusic = document.getElementById("bg-music");
+    const victoryMusic = document.getElementById("victory-music");
+    const comedyMusic = document.getElementById("comedy-music");
+
+    // ensure music starts even if autoplay blocked
+    window.addEventListener("load", () => {
+      bgMusic.play().catch(() => {
+        document.body.addEventListener("click", () => bgMusic.play(), { once: true });
+      });
+    });
+
+    function stopAllMusic() {
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+      victoryMusic.pause();
+      victoryMusic.currentTime = 0;
+      comedyMusic.pause();
+      comedyMusic.currentTime = 0;
     }
-  });
-}, { threshold: 0.3 });
 
-sections.forEach(section => observer.observe(section));
+    function handleYes() {
+      stopAllMusic();
+      victoryMusic.play();
 
-searchInput.addEventListener('input', () => {
-  const query = searchInput.value.toLowerCase();
-  sections.forEach(section => {
-    if (section.innerText.toLowerCase().includes(query) && query) {
-      section.scrollIntoView({ behavior: 'smooth' });
+      content.innerHTML = `
+        <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" alt="yay gif">
+        <h2>Yes! I knew you loved me cutie pie 💖</h2>
+      `;
+      showSparkles();
     }
-  });
-});
 
+    function handleNo() {
+      stopAllMusic();
+      comedyMusic.play();
+
+      step++;
+      if (step === 1) {
+        gif.src = "https://media.giphy.com/media/j5QcmXoFWl4Q0/giphy.gif";
+        question.innerText = "No need to be shy, you can be honest. Do you love me?";
+      } else if (step === 2) {
+        gif.src = "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif";
+        question.innerText = "Please think again 🥺";
+      } else if (step === 3) {
+        gif.src = "https://media.giphy.com/media/3ohc1dFUGhE7f1g3FK/giphy.gif";
+        question.innerText = "Maan jao na, kitna bhaav khaogi 💕";
+        noBtn.onmouseover = moveNoButton;
+      }
+    }
+
+    function moveNoButton() {
+      let x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 50);
+      let y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    function showSparkles() {
+      sparkles.style.display = "block";
+      for (let i = 0; i < 50; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+        sparkle.style.left = Math.random() * window.innerWidth + "px";
+        sparkle.style.top = Math.random() * window.innerHeight + "px";
+        sparkles.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    }
   </script>
 </body>
 </html>
