@@ -3,178 +3,320 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Do You Love Me? 💕</title>
+  <title>Om Bhushan - Introduction Website</title>
+  <link rel="icon" href="https://t3.ftcdn.net/jpg/03/08/01/88/360_F_308018888_dTriP4D0eoXGFCnGEsJt2qaSA69WpAmJ.jpg" type="image">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #ffdee9, #b5fffc);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      overflow: hidden;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #ffffff;
+      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413') no-repeat center center fixed;
+      background-size: cover;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
     }
-    .container {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      max-width: 500px;
-      width: 90%;
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      min-height: 100vh;
+      padding: 0;
+      position: relative;
+      z-index: 2;
     }
-    img {
-      width: 150px;
-      height: auto;
-      margin-bottom: 15px;
-    }
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: #ff4081;
-    }
-    .buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-    }
-    button {
-      padding: 10px 25px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 50px;
-      background: #ff9a9e;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: scale(1.1);
-    }
-    .sparkles {
+
+    header {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 15px 20px;
       position: fixed;
+      width: 100%;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      display: none;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
     }
-    .sparkle {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: gold;
+    header nav {
+      display: flex;
+      gap: 20px;
+    }
+    header nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    header nav a:hover {
+      color: #ffd700;
+    }
+    /* Search Bar */
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-box input {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      outline: none;
+    }
+    section {
+      padding: 100px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    h2 {
+      font-size: 2em;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #ffd700;
+    }
+    .content {
+      max-width: 800px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    p {
+      font-size: 1.2em;
+      line-height: 1.8;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    input, textarea {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    button {
+      padding: 12px;
+      background: #ffd700;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #e6c200;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.85);
+      color: #aaa;
+      margin-top: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* --- Animation Styles --- */
+    .section {
+      opacity: 0;
+      transform: translateY(80px) scale(0.95);
+      transition: all 1s ease-out;
+    }
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    #about.section { transform: translateX(-120px); }
+    #about.section.visible { transform: translateX(0); }
+    #education.section { transform: translateX(120px); }
+    #education.section.visible { transform: translateX(0); }
+    #current.section { transform: translateY(100px) scale(0.9); }
+    #current.section.visible { transform: translateY(0) scale(1); }
+
+    /* Highlight Search Results */
+    mark {
+      background: #ffd700;
+      color: #000;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    /* ===== Smooth Ripple Effect ===== */
+    .ripple {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      animation: sparkle 1s linear forwards;
+      pointer-events: none;
+      z-index: 2147483647;
+      transform: translate(-50%, -50%) scale(0);
+      will-change: transform, opacity;
+      animation: ripple-animation 900ms ease-out forwards;
+      background: radial-gradient(circle at center,
+                  rgba(173, 216, 230, 0.55) 0%,
+                  rgba(0, 150, 255, 0.35) 45%,
+                  rgba(0, 150, 255, 0.0) 70%);
+      filter: blur(0.2px);
     }
-    @keyframes sparkle {
-      0% { opacity: 1; transform: scale(1) translateY(0); }
-      100% { opacity: 0; transform: scale(2) translateY(-200px); }
+    @keyframes ripple-animation {
+      to {
+        transform: translate(-50%, -50%) scale(10);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Music Tracks -->
-  <audio id="bg-music" autoplay loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="victory-music">
-    <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="comedy-music" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-funnysong.mp3" type="audio/mpeg">
-  </audio>
+  <div class="overlay">
 
-  <div class="container" id="content">
-    <img id="gif" src="https://media.giphy.com/media/l4FGuhL4U2WyjdkaY/giphy.gif" alt="cute gif">
-    <h2 id="question">Do you Love Me? 💕</h2>
-    <div class="buttons">
-      <button onclick="handleYes()">Yes</button>
-      <button id="noBtn" onclick="handleNo()">No</button>
-    </div>
+    <!-- Header with Nav + Search -->
+    <header>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About Me</a>
+        <a href="#education">Education</a>
+        <a href="#current">Current Studies</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search...">
+      </div>
+    </header>
+
+    <!-- Home Section -->
+    <section class="section" id="home">
+      <h1>My Introduction Website</h1>
+      <div class="content">
+        <p>Welcome to my personal introduction website. Scroll down to know more about me!</p>
+      </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section class="section" id="about">
+      <h2>About Me</h2>
+      <div class="content">
+        <p><strong>Name:</strong> Om Bhushan</p>
+        <p><strong>Age:</strong> 19</p>
+        <p><strong>Gender:</strong> Male</p>
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="section" id="education">
+      <h2>Education</h2>
+      <div class="content">
+        <p>Matriculated from CBSE Board.</p>
+        <p>Completed Senior Secondary cousre from esteemed school St Mary's English High School with subjects as follows.1.Maths
+            2.Physics
+            3.Chemistry
+            4.English
+            5.Computer Science
+        </p>
+      </div>
+    </section>
+
+    <!-- Current Studies Section -->
+    <section class="section" id="current">
+      <h2>Current Studies</h2>
+      <div class="content">
+        <p>Currently pursuing <strong>Bachelor of Technology in Computer Science</strong>.</p>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+      <h2>Contact Me</h2>
+      <div class="content">
+        <p>You can reach me at:</p>
+        <p><strong>Email:</strong> <a href="mailto:ombhushan512@gmail.com" style="color:#ffd700;">ombhushan512@gmail.com</a></p>
+        <form>
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="Your Email" required>
+          <textarea rows="5" placeholder="Your Message"></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 Om Bhushan | All Rights Reserved</p>
+    </footer>
+
   </div>
 
-  <div class="sparkles" id="sparkles"></div>
-
+  <!-- Scripts -->
   <script>
-    let step = 0;
-    const gif = document.getElementById("gif");
-    const question = document.getElementById("question");
-    const content = document.getElementById("content");
-    const noBtn = document.getElementById("noBtn");
-    const sparkles = document.getElementById("sparkles");
-
-    const bgMusic = document.getElementById("bg-music");
-    const victoryMusic = document.getElementById("victory-music");
-    const comedyMusic = document.getElementById("comedy-music");
-
-    // ensure music starts even if autoplay blocked
-    window.addEventListener("load", () => {
-      bgMusic.play().catch(() => {
-        document.body.addEventListener("click", () => bgMusic.play(), { once: true });
-      });
+    // Section Animation
+    document.addEventListener("DOMContentLoaded", () => {
+      const sections = document.querySelectorAll(".section");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, { threshold: 0.2 });
+      sections.forEach(section => observer.observe(section));
     });
 
-    function stopAllMusic() {
-      bgMusic.pause();
-      bgMusic.currentTime = 0;
-      victoryMusic.pause();
-      victoryMusic.currentTime = 0;
-      comedyMusic.pause();
-      comedyMusic.currentTime = 0;
-    }
+    // ===== Search & Jump =====
+    const searchInput = document.getElementById("searchInput");
+    const contentElements = document.querySelectorAll("section .content, section h1, section h2");
 
-    function handleYes() {
-      stopAllMusic();
-      victoryMusic.play();
+    // Store originals
+    const originals = [];
+    contentElements.forEach(el => originals.push(el.innerHTML));
 
-      content.innerHTML = `
-        <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" alt="yay gif">
-        <h2>Yes! I knew you loved me cutie pie 💖</h2>
-      `;
-      showSparkles();
-    }
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.toLowerCase();
+      let firstMatch = null;
 
-    function handleNo() {
-      stopAllMusic();
-      comedyMusic.play();
+      contentElements.forEach((el, i) => {
+        el.innerHTML = originals[i]; // reset original
 
-      step++;
-      if (step === 1) {
-        gif.src = "https://media.giphy.com/media/j5QcmXoFWl4Q0/giphy.gif";
-        question.innerText = "No need to be shy, you can be honest. Do you love me?";
-      } else if (step === 2) {
-        gif.src = "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif";
-        question.innerText = "Please think again 🥺";
-      } else if (step === 3) {
-        gif.src = "https://media.giphy.com/media/3ohc1dFUGhE7f1g3FK/giphy.gif";
-        question.innerText = "Maan jao na, kitna bhaav khaogi 💕";
-        noBtn.onmouseover = moveNoButton;
+        if (query) {
+          const text = el.textContent.toLowerCase();
+          if (text.includes(query)) {
+            const regex = new RegExp(`(${query})`, "gi");
+            el.innerHTML = originals[i].replace(regex, "<mark>$1</mark>");
+            if (!firstMatch) firstMatch = el;
+          }
+        }
+      });
+
+      if (firstMatch) {
+        firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-    }
+    });
 
-    function moveNoButton() {
-      let x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 50);
-      let y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 50);
-      noBtn.style.position = "absolute";
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    }
-
-    function showSparkles() {
-      sparkles.style.display = "block";
-      for (let i = 0; i < 50; i++) {
-        const sparkle = document.createElement("div");
-        sparkle.classList.add("sparkle");
-        sparkle.style.left = Math.random() * window.innerWidth + "px";
-        sparkle.style.top = Math.random() * window.innerHeight + "px";
-        sparkles.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 1000);
-      }
-    }
+    // ===== Ripple Effect =====
+    document.addEventListener("pointerdown", (e) => {
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+      ripple.style.left = e.clientX + "px";
+      ripple.style.top = e.clientY + "px";
+      document.body.appendChild(ripple);
+      ripple.addEventListener("animationend", () => ripple.remove());
+    });
   </script>
 </body>
 </html>
